@@ -99,3 +99,11 @@ shape = SubResource( 5 )
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="RigidBody2D"]
 mesh = SubResource( 6 )
+
+[node name="Label" type="Label" parent="."]
+margin_right = 40.0
+margin_bottom = 14.0
+text = "Use arrows to apply force to circle"
+__meta__ = {
+"_edit_use_anchors_": false
+}
