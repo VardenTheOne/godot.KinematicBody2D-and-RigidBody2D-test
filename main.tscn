@@ -1,0 +1,101 @@
+[gd_scene load_steps=7 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends KinematicBody2D
+
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+const xmin = 200
+const xmax = 800
+var dir = 1
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+func _physics_process(delta):
+	position.x += delta * dir * 100
+	if position.x < xmin:
+		dir = 1
+	elif position.x > xmax:
+		dir = -1
+"
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 100, 20 )
+
+[sub_resource type="NoiseTexture" id=3]
+width = 200
+height = 40
+
+[sub_resource type="GDScript" id=4]
+script/source = "extends RigidBody2D
+
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+var force = Vector2(0,0)
+const maxforce = 200
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+func _physics_process(delta):
+	force = Vector2(0,0)
+	
+	if Input.is_action_pressed(\"ui_right\"):
+		force.x += maxforce * delta
+	if Input.is_action_pressed(\"ui_left\"):
+		force.x -= maxforce * delta
+	if Input.is_action_pressed(\"ui_up\"):
+		force.y -= maxforce * delta
+	if Input.is_action_pressed(\"ui_down\"):
+		force.y += maxforce * delta
+	
+	apply_central_impulse(force)
+"
+
+[sub_resource type="CircleShape2D" id=5]
+radius = 25.0
+
+[sub_resource type="SphereMesh" id=6]
+radius = 25.0
+height = 50.0
+
+[node name="Node2D" type="Node2D"]
+
+[node name="platform" type="KinematicBody2D" parent="."]
+position = Vector2( 200, 500 )
+script = SubResource( 1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="platform"]
+shape = SubResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="platform"]
+texture = SubResource( 3 )
+
+[node name="RigidBody2D" type="RigidBody2D" parent="."]
+position = Vector2( 300, 300 )
+script = SubResource( 4 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D"]
+shape = SubResource( 5 )
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="RigidBody2D"]
+mesh = SubResource( 6 )
